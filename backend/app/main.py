@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, Depends
+import re
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Optional
 
@@ -90,7 +91,26 @@ async def chat(request: ChatRequest):
         )
 
     except Exception as e:
-        logger.error(f"Error in chat endpoint: {str(e)}")
+        msg = str(e)
+        logger.error(f"Error in chat endpoint: {msg}")
+
+        # Detect rate-limit / quota messages and return 429 with Retry-After header when possible
+        lower = msg.lower()
+        if any(k in lower for k in ("rate limit", "quota", "429")):
+            # try to extract retry seconds
+            retry_seconds = None
+            try:
+                m = re.search(r"retry.*?(?:seconds[:\s]*)([0-9]+(?:\.[0-9]+)?)", msg, re.IGNORECASE)
+                if not m:
+                    m = re.search(r"retry in\s*([0-9]+(?:\.[0-9]+)?)s", msg, re.IGNORECASE)
+                if m:
+                    retry_seconds = int(float(m.group(1)))
+            except Exception:
+                retry_seconds = None
+
+            headers = {"Retry-After": str(retry_seconds)} if retry_seconds is not None else None
+            raise HTTPException(status_code=429, detail=msg, headers=headers)
+
         raise HTTPException(status_code=500, detail="Failed to generate response")
 
 @app.get("/api/sessions/{session_id}/history", response_model=ConversationHistory)
@@ -139,6 +159,46 @@ async def get_rag_stats():
     except Exception as e:
         logger.error(f"Error getting RAG stats: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to get RAG statistics")
+
+
+@app.get("/api/rag/debug")
+async def rag_debug(n: int = 3):
+    """Debug endpoint: return RAG stats and a small sample of indexed documents.
+
+    Query params:
+    - n: number of sample documents to return (default 3)
+    """
+    try:
+        stats = rag_system.get_stats()
+
+        # Try to get a small sample safely using the Chroma collection API
+        safe_sample = None
+        try:
+            coll = rag_system.collection
+            # prefer peek which is intended for small samples
+            try:
+                peek = coll.peek(n, include=["documents", "metadatas", "ids"])
+            except TypeError:
+                # some chromadb versions may not accept include for peek
+                peek = coll.peek(n)
+
+            # Build a JSON-serializable sample that excludes embeddings/binary blobs
+            if isinstance(peek, dict):
+                safe_sample = {}
+                for key in ("ids", "documents", "metadatas"):
+                    if key in peek:
+                        safe_sample[key] = peek[key]
+            else:
+                # Fallback: represent peek in a simple, serializable way
+                safe_sample = {"peek": str(peek)}
+
+        except Exception as exc:
+            logger.warning(f"Could not retrieve sample from Chroma collection: {exc}")
+
+        return {"stats": stats, "sample": safe_sample}
+    except Exception as e:
+        logger.error(f"Error in rag debug endpoint: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to get RAG debug info")
 
 # Background tasks
 @app.on_event("startup")

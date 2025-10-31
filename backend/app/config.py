@@ -12,7 +12,9 @@ class Settings(BaseSettings):
     # Paths and Models
     VECTOR_DB_PATH: str = "./therapy_vector_db"
     EMBEDDING_MODEL: str = "sentence-transformers/all-MiniLM-L6-v2"
-    GEMINI_MODEL: str = "gemini-2.5-pro"
+    # Use a lower-RPM model by default to avoid free-tier quota limits.
+    # Can be overridden with the GEMINI_MODEL environment variable.
+    GEMINI_MODEL: str = "gemini-2.0-flash-lite"
 
     # Application Settings
     MAX_CONVERSATION_HISTORY: int = 10

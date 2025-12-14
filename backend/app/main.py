@@ -143,14 +143,16 @@ async def get_session_summary(session_id: str, request: SummaryRequest):
         raise HTTPException(status_code=500, detail="Failed to generate summary")
 
 # RAG system endpoints
+from fastapi import BackgroundTasks
+
 @app.post("/api/rag/initialize")
-async def initialize_rag():
+async def initialize_rag(background_tasks: BackgroundTasks):
     try:
-        await rag_system.load_and_index_datasets()
-        return {"status": "success", "message": "RAG system initialized"}
+        background_tasks.add_task(rag_system.load_and_index_datasets)
+        return {"status": "success", "message": "RAG system initialization started in background"}
     except Exception as e:
-        logger.error(f"Error initializing RAG system: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to initialize RAG system")
+        logger.error(f"Error starting RAG initialization: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to start RAG initialization")
 
 @app.get("/api/rag/stats", response_model=RAGStats)
 async def get_rag_stats():

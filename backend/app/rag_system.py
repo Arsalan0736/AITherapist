@@ -14,18 +14,19 @@ from app.config import settings
 class TherapyDatasetProcessor:
     """Handles processing and standardization of various therapy datasets"""
     
+    # Dataset configurations with verified column names
+    # "text_column": single column containing text
+    # "text_columns": list of columns to combine (e.g., Context + Response)
     DATASET_CONFIGS = {
-        "Amod/mental_health_counseling_conversations": {"text_column": "text"},
-        "LuangMV97/Empathetic_counseling_Dataset": {"text_column": "conversation"},
-        "ShenLab/MentalChat16K": {"text_column": "conversation"},
-        "to-be/annomi-motivational-interviewing-therapy-conversations": {"text_column": "text"},
-        "IINOVAII/therapy-conversations-combined": {"text_column": "conversation"},
-        "anirudh2403/therapy-conversation-synthetic": {"text_column": "text"},
-        "MeetX/mental-health-dataset-mistral7b": {"text_column": "conversation"},
-        "marmikpandya/mental-health": {"text_column": "text"},
-        "mrfakename/deepseek-synthetic-emotional-support": {"text_column": "conversation"},
+        # Verified working datasets with correct column mappings
+        "Amod/mental_health_counseling_conversations": {"text_columns": ["Context", "Response"]},
+        "LuangMV97/Empathetic_counseling_Dataset": {"text_column": "input"},
+        "ShenLab/MentalChat16K": {"text_columns": ["instruction", "input", "output"]},
+        "IINOVAII/therapy-conversations-combined": {"text_columns": ["instruction", "input", "output"]},
+        "anirudh2403/therapy-conversation-synthetic": {"text_column": "Conversations"},
+        "MeetX/mental-health-dataset-mistral7b": {"text_column": "text"},
+        "marmikpandya/mental-health": {"text_columns": ["instruction", "output"]},
         "dair-ai/emotion": {"text_column": "text"},
-        "AhmedSSoliman/sentiment-analysis-for-mental-health-Combined-Data": {"text_column": "text"}
     }
 
     def __init__(self):
@@ -41,14 +42,29 @@ class TherapyDatasetProcessor:
             for split in dataset.keys():
                 data = dataset[split]
                 for item in data:
-                    processed_text = self._process_text(item[config["text_column"]])
+                    # Handle single column or multiple columns to combine
+                    if "text_column" in config:
+                        raw_text = item.get(config["text_column"], "")
+                        used_cols = [config["text_column"]]
+                    elif "text_columns" in config:
+                        # Combine multiple columns (e.g., Context + Response)
+                        parts = []
+                        for col in config["text_columns"]:
+                            if col in item and item[col]:
+                                parts.append(f"{col}: {item[col]}")
+                        raw_text = "\n".join(parts)
+                        used_cols = config["text_columns"]
+                    else:
+                        continue
+                    
+                    processed_text = self._process_text(raw_text)
                     if processed_text:
                         processed_data.append({
                             "text": processed_text,
                             "metadata": {
                                 "source": dataset_name,
                                 "split": split,
-                                **{k: v for k, v in item.items() if k != config["text_column"]}
+                                **{k: v for k, v in item.items() if k not in used_cols}
                             }
                         })
 

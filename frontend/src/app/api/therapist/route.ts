@@ -31,10 +31,10 @@ async function getOrCreateSession(): Promise<string> {
 export async function POST(request: Request) {
   try {
     const { message, currentEmotion } = await request.json();
-    
+
     // Get or create a session
     const sessionId = await getOrCreateSession();
-    
+
     // Send chat request to backend
     const backendResponse = await fetch('http://localhost:8000/api/chat', {
       method: 'POST',
@@ -55,7 +55,7 @@ export async function POST(request: Request) {
     }
 
     const data = await backendResponse.json();
-    
+
     return NextResponse.json({
       response: data.response,
       detectedEmotion: currentEmotion || detectEmotionFromText(message),

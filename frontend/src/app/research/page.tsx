@@ -3,29 +3,6 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
-const fadeIn = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease: 'easeOut'
-    }
-  }
-};
-
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-      delayChildren: 0.3,
-    },
-  },
-};
-
 const publications = [
   {
     title: 'Emotion Recognition in Therapeutic AI: A Comparative Analysis',
@@ -52,242 +29,135 @@ const publications = [
 
 export default function Research() {
   return (
-    <div className="font-sans min-h-screen bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-black">
-      <header className="w-full py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold text-blue-600 dark:text-blue-400">TherapAIst</Link>
-        <nav className="flex space-x-4">
-          <Link href="/" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">Home</Link>
-          <Link href="/about" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">About</Link>
-          <Link href="/team" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">Team</Link>
-          <Link href="/session" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">Session</Link>
-        </nav>
+    <div className="min-h-screen bg-background text-foreground">
+      {/* Header */}
+      <header className="fixed top-0 w-full z-50 glass border-b border-white/10 h-20 flex items-center">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full flex justify-between items-center">
+          <div className="flex items-center space-x-8">
+            <Link href="/" className="text-2xl font-bold tracking-tight">
+              Therap<span className="text-primary">AI</span>st
+            </Link>
+            <nav className="hidden md:flex space-x-6">
+              <Link href="/about" className="text-sm font-medium opacity-70 hover:opacity-100 transition-opacity">
+                About
+              </Link>
+              <Link href="/contact" className="text-sm font-medium opacity-70 hover:opacity-100 transition-opacity">
+                Contact
+              </Link>
+            </nav>
+          </div>
+          <Link
+            href="/session"
+            className="px-5 py-2 rounded-full bg-primary text-primary-foreground text-sm font-medium hover:bg-blue-600 transition-all shadow-lg shadow-blue-500/20"
+          >
+            Start Session
+          </Link>
+        </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <motion.div 
-          initial="hidden"
-          animate="visible"
-          variants={staggerContainer}
+      <main className="max-w-7xl mx-auto pt-28 pb-12 px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <motion.h1 
-            variants={fadeIn}
-            className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6"
-          >
-            Research & Publications
-          </motion.h1>
-          <motion.p 
-            variants={fadeIn}
-            className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto"
-          >
-            The academic foundation behind TherapAIst
-          </motion.p>
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">Research & <span className="text-primary">Publications</span></h1>
+          <p className="text-xl opacity-60 max-w-2xl mx-auto">
+            The academic foundation and scientific rigor behind TherapAIst.
+          </p>
         </motion.div>
 
-        <div className="mb-20">
-          <motion.h2 
+        <div className="bento-grid">
+          {/* Featured Paper */}
+          <motion.div
+            className="bento-card md:col-span-3 bg-gradient-to-br from-primary/5 to-transparent border-primary/20"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-2xl font-bold mb-8 text-gray-900 dark:text-white"
+            transition={{ delay: 0.2 }}
           >
-            Project Paper
-          </motion.h2>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg mb-12"
-          >
-            <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">TherapAIst: AI-Powered Emotional Support Through Video Interaction</h3>
-            <div className="text-gray-600 dark:text-gray-300 mb-6">
-              <p><strong>Authors:</strong> Johnson, A., Chen, S., Rivera, M., Patel, P., Wilson, J., & Martinez, O.</p>
-              <p><strong>Submitted to:</strong> International Conference on AI in Healthcare (ICAIH)</p>
-              <p><strong>Status:</strong> Final Year Project Thesis</p>
-            </div>
-            
-            <div className="space-y-4 text-gray-600 dark:text-gray-300">
-              <h4 className="text-xl font-semibold text-gray-900 dark:text-white">Abstract</h4>
-              <p>
-                This paper presents TherapAIst, an innovative AI-powered platform designed to provide accessible mental health support through video interaction. We address the growing global mental health crisis by leveraging artificial intelligence to create a system capable of detecting emotions, providing empathetic responses, and offering personalized therapeutic support.
-              </p>
-              <p>
-                Our approach combines computer vision for facial expression analysis, natural language processing for text sentiment analysis, and a response generation system trained on therapeutic techniques. The system was evaluated through user studies with 50 participants, demonstrating significant potential for supplementing traditional therapy and providing support to those with limited access to mental health services.
-              </p>
-              <p>
-                Results indicate that 78% of participants reported feeling understood by the AI system, with 82% stating they would use such a system as a complement to traditional therapy. Key challenges and ethical considerations are discussed, along with future directions for research in this rapidly evolving field.
-              </p>
-              
-              <div className="pt-4">
-                <Link 
-                  href="#"
-                  className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline font-medium"
-                  onClick={(e) => e.preventDefault()}
-                >
-                  Download Full Paper (PDF)
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                  </svg>
-                </Link>
+            <div className="flex flex-col md:flex-row gap-8 items-start">
+              <div className="flex-1">
+                <div className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold mb-4">
+                  FEATURED PAPER
+                </div>
+                <h2 className="text-3xl font-bold mb-4">TherapAIst: AI-Powered Emotional Support Through Video Interaction</h2>
+                <div className="opacity-70 mb-6 space-y-1">
+                  <p><strong>Authors:</strong> Johnson, A., Chen, S., Rivera, M., Patel, P., Wilson, J., & Martinez, O.</p>
+                  <p><strong>Submitted to:</strong> International Conference on AI in Healthcare (ICAIH)</p>
+                </div>
+                <p className="opacity-80 leading-relaxed mb-6">
+                  This paper presents TherapAIst, an innovative AI-powered platform designed to provide accessible mental health support through video interaction. We address the growing global mental health crisis by leveraging artificial intelligence to create a system capable of detecting emotions, providing empathetic responses, and offering personalized therapeutic support.
+                </p>
+                <button className="px-6 py-3 rounded-full bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity">
+                  Download PDF
+                </button>
+              </div>
+              <div className="w-full md:w-1/3 bg-white p-6 rounded-xl shadow-lg transform rotate-3 hover:rotate-0 transition-transform duration-500 hidden md:block">
+                <div className="w-full h-64 bg-slate-100 rounded mb-4"></div>
+                <div className="h-4 bg-slate-100 rounded w-3/4 mb-2"></div>
+                <div className="h-4 bg-slate-100 rounded w-1/2"></div>
               </div>
             </div>
           </motion.div>
-        </div>
 
-        <div className="mb-20">
-          <motion.h2 
+          {/* Methodology */}
+          <motion.div
+            className="bento-card md:col-span-2 bg-secondary/10"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-            className="text-2xl font-bold mb-8 text-gray-900 dark:text-white"
+            transition={{ delay: 0.3 }}
           >
-            Related Publications
-          </motion.h2>
-          
-          <div className="space-y-8">
-            {publications.map((pub, index) => (
-              <motion.div
-                key={pub.title}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.8 + (0.2 * index) }}
-                className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md"
-              >
-                <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">{pub.title}</h3>
-                <p className="text-blue-600 dark:text-blue-400 mb-2">{pub.authors}</p>
-                <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">{pub.journal}, {pub.year}</p>
-                <p className="text-gray-600 dark:text-gray-300">{pub.abstract}</p>
-              </motion.div>
-            ))}
-          </div>
+            <h3 className="text-xl font-bold mb-6">Research Methodology</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="p-4 bg-background rounded-xl">
+                <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 flex items-center justify-center mb-4">
+                  <span className="font-bold">1</span>
+                </div>
+                <h4 className="font-bold mb-2">Data Collection</h4>
+                <p className="text-sm opacity-70">User studies with 50 diverse participants and facial expression datasets.</p>
+              </div>
+              <div className="p-4 bg-background rounded-xl">
+                <div className="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 flex items-center justify-center mb-4">
+                  <span className="font-bold">2</span>
+                </div>
+                <h4 className="font-bold mb-2">Evaluation</h4>
+                <p className="text-sm opacity-70">Emotion recognition accuracy (92%) and response appropriateness.</p>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Stats */}
+          <motion.div
+            className="bento-card flex flex-col justify-center items-center text-center bg-primary text-primary-foreground"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <div className="text-5xl font-bold mb-2">92%</div>
+            <div className="opacity-80">Accuracy</div>
+          </motion.div>
+
+          {/* Related Publications */}
+          <motion.div
+            className="bento-card md:col-span-3"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            <h3 className="text-xl font-bold mb-6">Related Publications</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {publications.map((pub, i) => (
+                <div key={i} className="p-6 rounded-2xl bg-secondary/5 hover:bg-secondary/10 transition-colors border border-black/5 dark:border-white/5">
+                  <h4 className="font-bold mb-3 line-clamp-2">{pub.title}</h4>
+                  <p className="text-xs text-primary font-medium mb-2">{pub.journal}, {pub.year}</p>
+                  <p className="text-sm opacity-70 line-clamp-4">{pub.abstract}</p>
+                </div>
+              ))}
+            </div>
+          </motion.div>
         </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.4 }}
-          className="bg-gradient-to-r from-blue-600/10 to-purple-600/10 rounded-xl p-8 mb-12"
-        >
-          <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white text-center">Research Methodology</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-white/80 dark:bg-gray-800/80 p-6 rounded-lg">
-              <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Data Collection</h3>
-              <ul className="space-y-2 text-gray-600 dark:text-gray-300">
-                <li className="flex items-start">
-                  <svg className="h-6 w-6 mr-2 text-blue-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>User studies with 50 diverse participants</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="h-6 w-6 mr-2 text-blue-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>Facial expression datasets for emotion recognition training</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="h-6 w-6 mr-2 text-blue-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>Therapeutic conversation transcripts (anonymized)</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="h-6 w-6 mr-2 text-blue-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>Qualitative feedback through interviews and surveys</span>
-                </li>
-              </ul>
-            </div>
-            
-            <div className="bg-white/80 dark:bg-gray-800/80 p-6 rounded-lg">
-              <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Evaluation Metrics</h3>
-              <ul className="space-y-2 text-gray-600 dark:text-gray-300">
-                <li className="flex items-start">
-                  <svg className="h-6 w-6 mr-2 text-purple-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>Emotion recognition accuracy (92% for primary emotions)</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="h-6 w-6 mr-2 text-purple-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>Response appropriateness (rated by mental health professionals)</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="h-6 w-6 mr-2 text-purple-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>User satisfaction and perceived empathy scores</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="h-6 w-6 mr-2 text-purple-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>System usability scale (SUS) score of 84/100</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.6 }}
-          className="text-center"
-        >
-          <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Future Research Directions</h2>
-          <p className="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
-            Our team continues to explore new frontiers in AI-assisted mental health support, with ongoing research in the following areas:
-          </p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-              <h3 className="font-bold mb-3 text-gray-900 dark:text-white">Multimodal Emotion Detection</h3>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">
-                Combining facial, vocal, and textual cues for more accurate emotional state assessment.
-              </p>
-            </div>
-            
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-              <h3 className="font-bold mb-3 text-gray-900 dark:text-white">Personalized Therapeutic Approaches</h3>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">
-                Adapting response styles based on individual preferences and therapeutic needs.
-              </p>
-            </div>
-            
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-              <h3 className="font-bold mb-3 text-gray-900 dark:text-white">Long-term Effectiveness Studies</h3>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">
-                Measuring the impact of AI therapy assistants on mental health outcomes over time.
-              </p>
-            </div>
-          </div>
-          
-          <Link 
-            href="/contact"
-            className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
-          >
-            Collaborate on Research
-          </Link>
-        </motion.div>
       </main>
-
-      <footer className="w-full py-8 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-sm text-gray-500 dark:text-gray-400">© 2024 TherapAIst. All rights reserved.</p>
-          <div className="flex space-x-6 mt-4 md:mt-0">
-            <Link href="/" className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Home</Link>
-            <Link href="/about" className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">About</Link>
-            <Link href="/team" className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Team</Link>
-            <Link href="/contact" className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Contact</Link>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
